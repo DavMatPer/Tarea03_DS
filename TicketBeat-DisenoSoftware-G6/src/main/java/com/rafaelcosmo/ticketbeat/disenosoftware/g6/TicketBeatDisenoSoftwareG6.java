@@ -8,17 +8,17 @@ package com.rafaelcosmo.ticketbeat.disenosoftware.g6;
  *
  * @author Rafael Cosmo
  */
-import politica.VerificacionEdadDecorator;
-import politica.RestriccionSocioDecorator;
-import politica.LimiteBoletosDecorator;
-import politica.PoliticaEventoBase;
-import boletos.creadores.CreadorBoletoGeneral;
-import boletos.creadores.CreadorBoletoReservado;
-import boletos.creadores.CreadorBoletoVIP;
-import boletos.creadores.CreadorBoleto;
-import estrategia_pago.PagoMovilStrategy;
-import estrategia_pago.PagoTarjetaStrategy;
-import estrategia_pago.PagoTransferenciaStrategy;
+import com.ticketbeat.politica.VerificacionEdadDecorator;
+import com.ticketbeat.politica.RestriccionSocioDecorator;
+import com.ticketbeat.politica.LimiteBoletosDecorator;
+import com.ticketbeat.politica.PoliticaEventoBase;
+import com.ticketbeat.boletos.creadores.CreadorBoletoGeneral;
+import com.ticketbeat.boletos.creadores.CreadorBoletoReservado;
+import com.ticketbeat.boletos.creadores.CreadorBoletoVIP;
+import com.ticketbeat.boletos.creadores.CreadorBoleto;
+import com.ticketbeat.estrategia_pago.PagoMovilStrategy;
+import com.ticketbeat.estrategia_pago.PagoTarjetaStrategy;
+import com.ticketbeat.estrategia_pago.PagoTransferenciaStrategy;
 import com.ticketbeat.interfaces.*;
 import com.ticketbeat.gestores.*;
 import com.ticketbeat.modelo.*;
