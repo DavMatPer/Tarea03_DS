@@ -1,4 +1,4 @@
-package com.ticketbeat.servicios;
+package estrategia_pago;
 
 import com.ticketbeat.interfaces.EstrategiaPago;
 import com.ticketbeat.modelo.Pago;

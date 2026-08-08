@@ -1,7 +1,9 @@
 /*
  * Manejador Abstracto - Patrón Chain of Responsibility
  */
-package com.ticketbeat.modelo;
+package manejador_incidente;
+
+import com.ticketbeat.modelo.Incidente;
 
 /**
  * Clase abstracta que define la cadena de responsabilidad

@@ -1,6 +1,7 @@
-package com.ticketbeat.modelo;
+package politica;
 
 import com.ticketbeat.interfaces.IPoliticaCompra;
+import com.ticketbeat.modelo.Comprador;
 
 public abstract class PoliticaDecorator implements IPoliticaCompra {
     protected IPoliticaCompra componente;

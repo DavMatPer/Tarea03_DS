@@ -1,6 +1,8 @@
-package com.ticketbeat.modelo;
+package politica;
 
+import politica.PoliticaDecorator;
 import com.ticketbeat.interfaces.IPoliticaCompra;
+import com.ticketbeat.modelo.Comprador;
 
 public class LimiteBoletosDecorator extends PoliticaDecorator {
     private int limiteBoletoPorUsuario;

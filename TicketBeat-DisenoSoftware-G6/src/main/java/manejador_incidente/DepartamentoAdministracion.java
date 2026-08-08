@@ -1,7 +1,10 @@
 /*
  * Manejador Concreto - Patrón Chain of Responsibility
  */
-package com.ticketbeat.modelo;
+package manejador_incidente;
+
+import com.ticketbeat.modelo.Incidente;
+import manejador_incidente.ManejadorIncidente;
 
 /**
  * Último eslabón de la cadena. Aplica resolución final

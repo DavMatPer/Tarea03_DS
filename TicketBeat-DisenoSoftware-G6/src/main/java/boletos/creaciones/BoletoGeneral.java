@@ -1,9 +1,10 @@
 /*
  * Producto Concreto - Patrón Factory Method
  */
-package com.ticketbeat.modelo;
+package boletos.creaciones;
 
 import com.ticketbeat.interfaces.IBoleto;
+import com.ticketbeat.modelo.EstadoBoleto;
 
 /**
  * Boleto de tipo General con una sección asignada.

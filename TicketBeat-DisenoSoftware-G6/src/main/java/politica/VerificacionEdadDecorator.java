@@ -1,6 +1,8 @@
-package com.ticketbeat.modelo;
+package politica;
 
+import politica.PoliticaDecorator;
 import com.ticketbeat.interfaces.IPoliticaCompra;
+import com.ticketbeat.modelo.Comprador;
 
 public class VerificacionEdadDecorator extends PoliticaDecorator {
     private int edadMinima;

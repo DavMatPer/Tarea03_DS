@@ -2,9 +2,9 @@ package com.ticketbeat.gestores;
 
 import com.ticketbeat.modelo.Incidente;
 import com.ticketbeat.modelo.Comprador;
-import com.ticketbeat.modelo.ManejadorIncidente;
-import com.ticketbeat.modelo.AgenteSoporte;
-import com.ticketbeat.modelo.DepartamentoAdministracion;
+import manejador_incidente.ManejadorIncidente;
+import manejador_incidente.AgenteSoporte;
+import manejador_incidente.DepartamentoAdministracion;
 
 public class GestorIncidentes {
 

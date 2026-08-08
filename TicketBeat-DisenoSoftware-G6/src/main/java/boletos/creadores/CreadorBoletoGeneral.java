@@ -1,8 +1,10 @@
 /*
  * Creador Concreto - Patrón Factory Method
  */
-package com.ticketbeat.modelo;
+package boletos.creadores;
 
+import boletos.creaciones.BoletoGeneral;
+import boletos.creadores.CreadorBoleto;
 import com.ticketbeat.interfaces.IBoleto;
 
 /**
