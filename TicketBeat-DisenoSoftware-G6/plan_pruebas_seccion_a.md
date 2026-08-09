@@ -36,9 +36,10 @@ Para diseñar el plan se siguieron tres criterios:
 
 | Clase | ID | Método a probar | Datos de entrada | Salida esperada | Propósito de la prueba |
 |---|---|---|---|---|---|
-| GestorEventos | TC-001 | `solicitarResumenEvento` | Evento con `boletosVendidos=50`, `montoRecaudado=5000.0` | Imprime "Resumen: 50 boletos vendidos, Monto: $5000.0", sin excepciones | [Típico] Verificar que el resumen refleje correctamente los datos del evento |
-| GestorEventos | TC-002 | `solicitarResumenEvento` | `evento = null` | Lanza `NullPointerException` | [Error] Detectar la ausencia de manejo de argumentos nulos |
-| GestorEventos | TC-003 | `confirmarCancelacion` | Evento con 2 boletos (1 `VENDIDO`, 1 `DISPONIBLE`), política y notificador válidos, `motivo="Artista indispuesto"` | Estado del evento pasa a `"CANCELADO"`; se notifica solo al boleto `VENDIDO` (1 elemento en la lista de afectados) | [Típico] Verificar el flujo completo de cancelación, incluyendo el filtrado real de boletos afectados |
+| GestorEventos | TC-N-001 | `solicitarResumenEvento` | Evento con `boletosVendidos=50`, `montoRecaudado=5000.0` | Imprime "Resumen: 50 boletos vendidos, Monto: $5000.0", sin excepciones | [Típico] Verificar que el resumen refleje correctamente los datos del evento |
+| GestorEventos | TC-E-002 | `solicitarResumenEvento` | `evento = null` | Lanza `NullPointerException` | [Error] Detectar la ausencia de manejo de argumentos nulos |
+| GestorEventos | TC-E-003 | `solicitarResumenEvento` | `idEvento = null` | Lanza `NullPointerException` | [Error] Detectar la ausencia de manejo de argumentos nulos |
+| GestorEventos | TC-N-003 | `confirmarCancelacion` | Evento con 2 boletos (1 `VENDIDO`, 1 `DISPONIBLE`), política y notificador válidos, `motivo="Artista indispuesto"` | Estado del evento pasa a `"CANCELADO"`; se notifica solo al boleto `VENDIDO` (1 elemento en la lista de afectados) | [Típico] Verificar el flujo completo de cancelación, incluyendo el filtrado real de boletos afectados |
 | GestorEventos | TC-004 | `confirmarCancelacion` | `politica = null` | Lanza `NullPointerException` | [Error] Detectar falta de validación cuando no se provee una política |
 | GestorIncidentes | TC-005 | `registrarYClasificar` | `descripcion="El boleto no llegó al correo"` | Retorna `Incidente` con `getDescripcion()` igual al texto dado | [Típico] Verificar la creación correcta del incidente |
 | GestorIncidentes | TC-006 | `registrarYClasificar` | `descripcion = null` | Retorna un `Incidente` con descripción `null`, sin excepción | [Límite] Verificar el comportamiento ante entrada nula |
