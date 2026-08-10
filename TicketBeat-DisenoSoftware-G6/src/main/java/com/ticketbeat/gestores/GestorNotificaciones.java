@@ -34,7 +34,10 @@ public class GestorNotificaciones {
     }
 
     private ICanal seleccionarCanalDeComunicacion(Comprador comprador) {
-        return null; // Aquí retornaría el ICanal asociado al comprador
+        if (comprador == null) {
+            return null;
+        }
+        return comprador.getCanalPreferido();
     }
 
     private void registrarEstadoDeEntrega() {
