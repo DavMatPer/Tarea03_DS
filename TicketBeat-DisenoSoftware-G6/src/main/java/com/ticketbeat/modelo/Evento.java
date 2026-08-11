@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.ticketbeat.modelo;
 
 /**
@@ -13,10 +9,17 @@ import com.ticketbeat.interfaces.IPoliticaCompra;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * Ahora usa {@link EstadoEvento} en vez de un String libre (corrección del
+ * code smell "Obsesión Primitiva") e incorpora
+ * {@link #obtenerBoletosParaDevolucion()}, que antes vivía en la clase
+ * externa PoliticaEvento operando casi exclusivamente sobre los datos de
+ * Evento (corrección del code smell "Envidia de Características").
+ */
 public class Evento {
     private String id;
     private String nombre;
-    private String estado;
+    private EstadoEvento estado;
     private int boletosVendidos;
     private double montoRecaudado;
     private List<IBoleto> boletos;
@@ -24,24 +27,65 @@ public class Evento {
 
     public Evento() {
         this.boletos = new ArrayList<>();
+        this.estado = EstadoEvento.ACTIVO;
     }
 
     public int getBoletosVendidos() { 
         return boletosVendidos; 
     }
+
+    public void setBoletosVendidos(int boletosVendidos) {
+        this.boletosVendidos = boletosVendidos;
+    }
     
     public double getMontoRecaudado() { 
         return montoRecaudado; 
     }
+
+    public void setMontoRecaudado(double montoRecaudado) {
+        this.montoRecaudado = montoRecaudado;
+    }
     
-    public void setEstado(String estado) { 
+    public EstadoEvento getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoEvento estado) { 
         this.estado = estado; 
         System.out.println("El estado del evento ha cambiado a: " + estado);
     }
 
     public List<IBoleto> getBoletos() { return boletos; }
     public void agregarBoleto(IBoleto boleto) { this.boletos.add(boleto); }
+    public void setBoletos(List<IBoleto> boletos) { this.boletos = boletos; }
 
     public IPoliticaCompra getPolitica() { return politica; }
     public void setPolitica(IPoliticaCompra politica) { this.politica = politica; }
+
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+
+    /**
+     * Determina qué boletos de este evento son elegibles para devolución
+     * (vendidos o reservados). Movido aquí desde la extinta clase
+     * PoliticaEvento: toda la lógica opera sobre los boletos propios del
+     * evento, así que es este objeto quien debe resolverla.
+     */
+    public List<IBoleto> obtenerBoletosParaDevolucion() {
+        List<IBoleto> boletosAfectados = new ArrayList<>();
+        if (boletos == null) {
+            return boletosAfectados;
+        }
+        for (IBoleto boleto : boletos) {
+            if (boleto == null) continue;
+            EstadoBoleto estadoBoleto = boleto.getEstado();
+            if (estadoBoleto == EstadoBoleto.VENDIDO || estadoBoleto == EstadoBoleto.RESERVADO) {
+                boletosAfectados.add(boleto);
+            }
+        }
+        return boletosAfectados;
+    }
 }
