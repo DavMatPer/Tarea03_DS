@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package com.rafaelcosmo.ticketbeat.disenosoftware.g6;
 
 /**
@@ -28,6 +24,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Antes toda la simulación vivía en un único método main() de más de 170
+ * líneas mezclando los cuatro patrones demostrados (code smell "Método
+ * Largo"). Ahora cada patrón tiene su propio método privado, y main() queda
+ * como una secuencia legible de llamadas.
+ */
 public class TicketBeatDisenoSoftwareG6 {
 
     public static void main(String[] args) {
@@ -35,20 +37,34 @@ public class TicketBeatDisenoSoftwareG6 {
         System.out.println("       INICIANDO SISTEMA TICKETBEAT - GRUPO 6");
         System.out.println("=================================================\n");
 
-        // Datos globales
+        Comprador comprador = crearCompradorDemo();
+        GestorNotificaciones gestorNotif = new GestorNotificaciones();
+
+        List<IBoleto> boletosEmitidos = demostrarFactoryMethod();
+        demostrarStrategy(comprador, boletosEmitidos);
+        Evento concierto = demostrarDecorator(comprador);
+        demostrarCancelacionEvento(concierto, boletosEmitidos, gestorNotif);
+        demostrarChainOfResponsibility();
+
+        System.out.println("\n=================================================");
+        System.out.println("          FIN DE LA SIMULACIÓN - GRUPO 6");
+        System.out.println("=================================================");
+    }
+
+    private static Comprador crearCompradorDemo() {
         Comprador comprador = new Comprador();
         comprador.setNombre("Juan Perez");
+        comprador.setEmail("juan.perez@example.com");
         comprador.setCanalPreferido(new CanalEmail());
         comprador.setEdad(25);
         comprador.setEsSocio(true);
+        return comprador;
+    }
 
-        GestorNotificaciones gestorNotif = new GestorNotificaciones();
-        Evento concierto = new Evento();
-
-
-        // =================================================================
-        // PRUEBA PATRON 1 - FACTORY METHOD: Creación de Boletos
-        // =================================================================
+    // =================================================================
+    // PRUEBA PATRON 1 - FACTORY METHOD: Creación de Boletos
+    // =================================================================
+    private static List<IBoleto> demostrarFactoryMethod() {
         System.out.println("=== PRUEBA FACTORY METHOD: CREACIÓN DE BOLETOS ===\n");
 
         // Se crean los creadores concretos (sin depender de las clases concretas de boleto)
@@ -78,15 +94,24 @@ public class TicketBeatDisenoSoftwareG6 {
 
         System.out.println("\n=================================================\n");
 
+        List<IBoleto> boletos = new ArrayList<>();
+        boletos.add(boletoVip);
+        boletos.add(boletoGen);
+        boletos.add(boletoRes);
+        return boletos;
+    }
 
-        // =================================================================
-        // PRUEBA PATRON 2 - STRATEGY: Procesamiento de Pagos
-        // =================================================================
+    // =================================================================
+    // PRUEBA PATRON 2 - STRATEGY: Procesamiento de Pagos
+    // =================================================================
+    private static void demostrarStrategy(Comprador comprador, List<IBoleto> boletosSeleccionados) {
         System.out.println("=== PRUEBA STRATEGY: PROCESAMIENTO DE PAGOS ===\n");
         GestorReservas gestorReservas = new GestorReservas();
 
         gestorReservas.buscarEventos();
         gestorReservas.seleccionarEvento();
+        gestorReservas.setComprador(comprador);
+        gestorReservas.setBoletosSeleccionados(boletosSeleccionados);
         gestorReservas.elegirCantidadYTipoDeEntrada();
 
         // Pago con Tarjeta
@@ -95,7 +120,7 @@ public class TicketBeatDisenoSoftwareG6 {
         gestorReservas.setEstrategiaPago(tarjetaStrategy);
 
         Map<String, String> datosTarjeta = new HashMap<>();
-        datosTarjeta.put("numeroTarjeta", "1234-5678-9012-3456");
+        datosTarjeta.put("numero", "1234-5678-9012-3456");
         datosTarjeta.put("cvv", "123");
         gestorReservas.confirmarCompra(150.50, datosTarjeta);
 
@@ -105,7 +130,7 @@ public class TicketBeatDisenoSoftwareG6 {
         gestorReservas.setEstrategiaPago(movilStrategy);
 
         Map<String, String> datosMovil = new HashMap<>();
-        datosMovil.put("numeroTelefono", "0412-1234567");
+        datosMovil.put("telefono", "0412-1234567");
         gestorReservas.confirmarCompra(200.00, datosMovil);
 
         // Cambio dinámico a Transferencia
@@ -114,16 +139,20 @@ public class TicketBeatDisenoSoftwareG6 {
         gestorReservas.setEstrategiaPago(transferenciaStrategy);
 
         Map<String, String> datosTransferencia = new HashMap<>();
-        datosTransferencia.put("cuentaOrigen", "0102-1234-5678");
+        datosTransferencia.put("cuenta", "0102-1234-5678");
         gestorReservas.confirmarCompra(300.00, datosTransferencia);
 
         System.out.println("\n=================================================\n");
+    }
 
-
-        // =================================================================
-        // PRUEBA PATRON 3 - DECORATOR: Políticas y Restricciones
-        // =================================================================
+    // =================================================================
+    // PRUEBA PATRON 3 - DECORATOR: Políticas y Restricciones
+    // =================================================================
+    private static Evento demostrarDecorator(Comprador comprador) {
         System.out.println("=== PRUEBA DECORATOR: POLÍTICAS Y RESTRICCIONES ===\n");
+
+        Evento concierto = new Evento();
+        concierto.setNombre("Concierto de Rock");
 
         // Construir política con múltiples decoradores envueltos
         IPoliticaCompra politicaDecorada = new VerificacionEdadDecorator(
@@ -176,11 +205,35 @@ public class TicketBeatDisenoSoftwareG6 {
         System.out.println("Resultado: " + (resultado5 ? "APROBADA" : "RECHAZADA"));
 
         System.out.println("\n=================================================\n");
+        return concierto;
+    }
 
+    // =================================================================
+    // PRUEBA GESTOR DE EVENTOS: Cancelación y devolución
+    // (antes no se demostraba en main(); ahora se aprovecha para mostrar
+    //  el flujo unificado de IPoliticaCompra.aplicarPoliticaDevolucion)
+    // =================================================================
+    private static void demostrarCancelacionEvento(Evento concierto, List<IBoleto> boletosEmitidos,
+                                                     GestorNotificaciones gestorNotif) {
+        System.out.println("=== PRUEBA GESTOR DE EVENTOS: CANCELACIÓN Y DEVOLUCIÓN ===\n");
 
-        // =================================================================
-        // PRUEBA PATRON 4 - CHAIN OF RESPONSIBILITY: Gestión de Incidentes
-        // =================================================================
+        for (IBoleto boleto : boletosEmitidos) {
+            concierto.agregarBoleto(boleto);
+        }
+        boletosEmitidos.get(0).setEstado(EstadoBoleto.VENDIDO);
+        boletosEmitidos.get(1).setEstado(EstadoBoleto.RESERVADO);
+        boletosEmitidos.get(2).setEstado(EstadoBoleto.DISPONIBLE);
+
+        GestorEventos gestorEventos = new GestorEventos(gestorNotif);
+        gestorEventos.confirmarCancelacion("Fuerza mayor", concierto);
+
+        System.out.println("\n=================================================\n");
+    }
+
+    // =================================================================
+    // PRUEBA PATRON 4 - CHAIN OF RESPONSIBILITY: Gestión de Incidentes
+    // =================================================================
+    private static void demostrarChainOfResponsibility() {
         System.out.println("=== PRUEBA CHAIN OF RESPONSIBILITY: GESTIÓN DE INCIDENTES ===\n");
         GestorIncidentes gestorIncidentes = new GestorIncidentes();
 
@@ -193,10 +246,5 @@ public class TicketBeatDisenoSoftwareG6 {
         // Incidente complejo: escala automáticamente a DepartamentoAdministracion
         System.out.println(">> Incidente 2 (Complejo): Escala automáticamente al siguiente nivel");
         gestorIncidentes.registrarIncidente("Problema complejo con doble cobro y reembolso pendiente");
-
-
-        System.out.println("\n=================================================");
-        System.out.println("          FIN DE LA SIMULACIÓN - GRUPO 6");
-        System.out.println("=================================================");
     }
 }
