@@ -3,24 +3,20 @@
  */
 package com.ticketbeat.boletos.creaciones;
 
-import com.ticketbeat.interfaces.IBoleto;
-import com.ticketbeat.modelo.EstadoBoleto;
-
 /**
  * Boleto de tipo Reservado con asiento y fila específicos.
  *
+ * Ahora extiende {@link BoletoAbstracto} (corrección del code smell "Código
+ * Duplicado").
+ *
  * @author Rafael Cosmo
  */
-public class BoletoReservado implements IBoleto {
-    private String id;
-    private EstadoBoleto estado;
-    private double precio;
+public class BoletoReservado extends BoletoAbstracto {
     private String numeroAsiento;
     private String fila;
 
     public BoletoReservado() {
-        this.estado = EstadoBoleto.DISPONIBLE;
-        this.precio = 250.0;
+        super(250.0);
         this.numeroAsiento = "A15";
         this.fila = "Fila 3";
     }
@@ -34,17 +30,6 @@ public class BoletoReservado implements IBoleto {
         System.out.println("Estado: " + estado);
     }
 
-    @Override
-    public EstadoBoleto getEstado() {
-        return estado;
-    }
-
-    @Override
-    public double getPrecio() {
-        return precio;
-    }
-
-    public void setEstado(EstadoBoleto estado) { this.estado = estado; }
     public String getNumeroAsiento() { return numeroAsiento; }
     public void setNumeroAsiento(String numeroAsiento) { this.numeroAsiento = numeroAsiento; }
     public String getFila() { return fila; }

@@ -1,14 +1,15 @@
-/*
- * Manejador Concreto - Patrón Chain of Responsibility
- */
 package com.ticketbeat.manejador_incidente;
 
+import com.ticketbeat.modelo.EstadoIncidente;
 import com.ticketbeat.modelo.Incidente;
 
 
 /**
  * Primer eslabón de la cadena. Intenta resolver el incidente
  * en primer nivel; si no puede, lo pasa al siguiente manejador.
+ *
+ * Ahora marca el incidente como EstadoIncidente.RESUELTO cuando lo atiende
+ * en este nivel, dando uso real al campo "estado" (antes inalcanzable).
  *
  * @author Rafael Cosmo
  */
@@ -28,6 +29,7 @@ public class AgenteSoporte extends ManejadorIncidente {
     @Override
     public void manejarIncidente(Incidente incidente) {
         if (puedeResolver(incidente)) {
+            incidente.setEstado(EstadoIncidente.RESUELTO);
             System.out.println("[AgenteSoporte " + idAgente + "] Incidente resuelto en primer nivel: " 
                 + incidente.getDescripcion());
         } else {
@@ -40,3 +42,6 @@ public class AgenteSoporte extends ManejadorIncidente {
         }
     }
 }
+/*
+ * Manejador Concreto - Patrón Chain of Responsibility
+ */
