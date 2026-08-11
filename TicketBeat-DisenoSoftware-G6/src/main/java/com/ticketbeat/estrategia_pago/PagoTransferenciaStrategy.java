@@ -1,11 +1,16 @@
 package com.ticketbeat.estrategia_pago;
 
-import com.ticketbeat.interfaces.EstrategiaPago;
-import com.ticketbeat.modelo.Pago;
 import java.util.Map;
-import java.util.UUID;
 
-public class PagoTransferenciaStrategy implements EstrategiaPago {
+/**
+ * Estrategia de pago por transferencia. Ahora extiende
+ * {@link AbstractEstrategiaPago} y usa el parámetro "datos" para leer la
+ * cuenta de origen (corrección de "Código Duplicado" y "Generalización
+ * Especulativa").
+ *
+ * @author Rafael Cosmo
+ */
+public class PagoTransferenciaStrategy extends AbstractEstrategiaPago {
     private String banco;
 
     public PagoTransferenciaStrategy(String banco) {
@@ -13,16 +18,13 @@ public class PagoTransferenciaStrategy implements EstrategiaPago {
     }
 
     @Override
-    public Pago procesarPago(double monto, Map<String, String> datos) {
-        System.out.println("[" + banco + "] Validando transferencia bancaria por $" + monto);
-        // Lógica de procesamiento de pago con transferencia
-        String pagoId = UUID.randomUUID().toString();
-        return new Pago(pagoId, monto, "COMPLETADO");
+    protected String mensajeProcesamiento(double monto, Map<String, String> datos) {
+        String cuenta = obtenerDato(datos, "cuenta");
+        return "[" + banco + "] Validando transferencia bancaria (cuenta " + cuenta + ") por $" + monto;
     }
 
     @Override
-    public boolean revertirPago(String pagoId) {
-        System.out.println("[" + banco + "] Extornando el pago " + pagoId + " a la cuenta de origen.");
-        return true;
+    protected String mensajeReversion(String pagoId) {
+        return "[" + banco + "] Extornando el pago " + pagoId + " a la cuenta de origen.";
     }
 }

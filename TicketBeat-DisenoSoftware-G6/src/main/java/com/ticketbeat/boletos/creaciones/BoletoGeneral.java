@@ -1,25 +1,18 @@
-/*
- * Producto Concreto - Patrón Factory Method
- */
 package com.ticketbeat.boletos.creaciones;
-
-import com.ticketbeat.interfaces.IBoleto;
-import com.ticketbeat.modelo.EstadoBoleto;
 
 /**
  * Boleto de tipo General con una sección asignada.
  *
+ * Ahora extiende {@link BoletoAbstracto}, que concentra id/estado/precio y
+ * sus accesores (corrección del code smell "Código Duplicado").
+ *
  * @author Rafael Cosmo
  */
-public class BoletoGeneral implements IBoleto {
-    private String id;
-    private EstadoBoleto estado;
-    private double precio;
+public class BoletoGeneral extends BoletoAbstracto {
     private String seccion;
 
     public BoletoGeneral() {
-        this.estado = EstadoBoleto.DISPONIBLE;
-        this.precio = 100.0;
+        super(100.0);
         this.seccion = "General A";
     }
 
@@ -31,17 +24,6 @@ public class BoletoGeneral implements IBoleto {
         System.out.println("Estado: " + estado);
     }
 
-    @Override
-    public EstadoBoleto getEstado() {
-        return estado;
-    }
-
-    @Override
-    public double getPrecio() {
-        return precio;
-    }
-
-    public void setEstado(EstadoBoleto estado) { this.estado = estado; }
     public String getSeccion() { return seccion; }
     public void setSeccion(String seccion) { this.seccion = seccion; }
 }

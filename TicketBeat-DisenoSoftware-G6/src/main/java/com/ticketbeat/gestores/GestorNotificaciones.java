@@ -5,6 +5,16 @@ import com.ticketbeat.interfaces.IBoleto;
 import com.ticketbeat.modelo.Comprador;
 import java.util.List;
 
+/**
+ * notificarCompradores() y notificarResolucion() ahora usan realmente los
+ * datos que reciben, en vez de ignorarlos e imprimir siempre el mismo mensaje
+ * genérico (corrección del code smell "Código Muerto"). notificarCompradores
+ * además usa IBoleto.getComprador() para notificar al comprador real de cada
+ * boleto cuando ese vínculo existe, resolviendo la falta de relación
+ * Boleto-Comprador señalada en las notas de diseño del plan de pruebas.
+ *
+ * @author Rafael Cosmo
+ */
 public class GestorNotificaciones {
 
     public void iniciarProcesoDeNotificacion(List<Comprador> compradoresAfectados, String mensajeBase) {
@@ -34,19 +44,60 @@ public class GestorNotificaciones {
     }
 
     private ICanal seleccionarCanalDeComunicacion(Comprador comprador) {
-        return null; // Aquí retornaría el ICanal asociado al comprador
+        if (comprador == null) {
+            return null;
+        }
+        return comprador.getCanalPreferido();
     }
 
     private void registrarEstadoDeEntrega() {
         System.out.println("Estado de entrega registrado.");
     }
 
-    // Métodos de apoyo llamados desde GestorEventos y GestorIncidentes
+    /**
+     * Antes ignoraba por completo "afectados" e imprimía siempre el mismo
+     * mensaje genérico. Ahora recorre efectivamente la lista recibida y,
+     * cuando el boleto tiene un comprador vinculado (IBoleto.getComprador()),
+     * lo notifica a él específicamente por su canal preferido — antes esto
+     * era imposible porque IBoleto no tenía ninguna referencia a Comprador.
+     */
     public void notificarCompradores(List<IBoleto> afectados, String mensaje) {
-        System.out.println("Enviando notificación masiva: " + mensaje);
+        if (afectados == null || afectados.isEmpty()) {
+            System.out.println("No hay boletos afectados; no se envían notificaciones.");
+            return;
+        }
+        System.out.println("Enviando notificación masiva a " + afectados.size()
+                + " boleto(s) afectado(s): " + mensaje);
+        for (IBoleto boleto : afectados) {
+            Comprador comprador = boleto.getComprador();
+            if (comprador != null) {
+                String nombre = (comprador.getNombre() != null) ? comprador.getNombre() : "comprador";
+                System.out.println(" - Notificando a " + nombre + " (boleto $" + boleto.getPrecio()
+                        + ", estado previo: " + boleto.getEstado() + "): " + mensaje);
+                if (comprador.getCanalPreferido() != null) {
+                    comprador.getCanalPreferido().enviar(mensaje);
+                }
+            } else {
+                System.out.println(" - Boleto sin comprador identificado ($" + boleto.getPrecio()
+                        + ", estado previo: " + boleto.getEstado() + "); no se puede notificar directamente: " + mensaje);
+            }
+        }
     }
 
+    /**
+     * Antes ignoraba por completo "comprador". Ahora valida su presencia y,
+     * si tiene un canal preferido configurado, intenta enviarle el mensaje
+     * por ese canal.
+     */
     public void notificarResolucion(Comprador comprador, String mensaje) {
-        System.out.println("Notificando resolución al comprador: " + mensaje);
+        if (comprador == null) {
+            System.out.println("No se pudo notificar la resolución: comprador no especificado.");
+            return;
+        }
+        String nombre = (comprador.getNombre() != null) ? comprador.getNombre() : "comprador";
+        System.out.println("Notificando resolución a " + nombre + ": " + mensaje);
+        if (comprador.getCanalPreferido() != null) {
+            comprador.getCanalPreferido().enviar(mensaje);
+        }
     }
 }
