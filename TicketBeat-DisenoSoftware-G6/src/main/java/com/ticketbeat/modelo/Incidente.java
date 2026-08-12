@@ -1,13 +1,5 @@
 package com.ticketbeat.modelo;
 
-/**
- * Antes el campo "estado" no tenía getter ni setter, por lo que era
- * inalcanzable desde fuera de la clase (code smell "Clase Floja"). Ahora
- * expone accesores y usa {@link EstadoIncidente} en vez de un String libre
- * (code smell "Obsesión Primitiva").
- *
- * @author Rafael Cosmo
- */
 public class Incidente {
     private String idTicket;
     private String descripcion;

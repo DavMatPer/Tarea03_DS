@@ -4,15 +4,7 @@ import com.ticketbeat.modelo.EstadoIncidente;
 import com.ticketbeat.modelo.Incidente;
 
 
-/**
- * Primer eslabón de la cadena. Intenta resolver el incidente
- * en primer nivel; si no puede, lo pasa al siguiente manejador.
- *
- * Ahora marca el incidente como EstadoIncidente.RESUELTO cuando lo atiende
- * en este nivel, dando uso real al campo "estado" (antes inalcanzable).
- *
- * @author Rafael Cosmo
- */
+
 public class AgenteSoporte extends ManejadorIncidente {
     private String idAgente;
 

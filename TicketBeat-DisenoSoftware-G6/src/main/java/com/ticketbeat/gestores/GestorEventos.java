@@ -5,17 +5,6 @@ import com.ticketbeat.modelo.EstadoEvento;
 import com.ticketbeat.modelo.Evento;
 import java.util.List;
 
-/**
- * Ahora recibe su {@link GestorNotificaciones} colaborador por constructor
- * en vez de por parámetro en cada llamada (corrección parcial del code smell
- * "Lista de Parámetros Larga"), y confirmarCancelacion ya no exige una
- * PoliticaEvento externa: usa evento.getPolitica(), que ya existía pero se
- * ignoraba (corrección de "Intimidad Inapropiada" y, de paso, de "Envidia de
- * Características", ya que solicitarResumenEvento también dejó de recibir el
- * parámetro "idEvento" que nunca usaba — "Generalización Especulativa").
- *
- * @author Rafael Cosmo
- */
 public class GestorEventos {
 
     private final GestorNotificaciones notificador;

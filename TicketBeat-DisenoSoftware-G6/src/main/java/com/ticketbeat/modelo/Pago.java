@@ -1,13 +1,5 @@
 package com.ticketbeat.modelo;
 
-/**
- * Ahora usa {@link EstadoPago} en vez de un String libre (corrección del code
- * smell "Obsesión Primitiva"), y expone {@link #estaCompletado()} para que
- * los llamadores dejen de comparar el estado manualmente (corrección parcial
- * del code smell "Clase de Datos").
- *
- * @author Rafael Cosmo
- */
 public class Pago {
     private String id;
     private double monto;

@@ -24,12 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Antes toda la simulación vivía en un único método main() de más de 170
- * líneas mezclando los cuatro patrones demostrados (code smell "Método
- * Largo"). Ahora cada patrón tiene su propio método privado, y main() queda
- * como una secuencia legible de llamadas.
- */
 public class TicketBeatDisenoSoftwareG6 {
 
     public static void main(String[] args) {
@@ -67,7 +61,7 @@ public class TicketBeatDisenoSoftwareG6 {
     private static List<IBoleto> demostrarFactoryMethod() {
         System.out.println("=== PRUEBA FACTORY METHOD: CREACIÓN DE BOLETOS ===\n");
 
-        // Se crean los creadores concretos (sin depender de las clases concretas de boleto)
+        // Se crean los creadores concretos 
         CreadorBoleto creadorVIP = new CreadorBoletoVIP();
         CreadorBoleto creadorGeneral = new CreadorBoletoGeneral();
         CreadorBoleto creadorReservado = new CreadorBoletoReservado();

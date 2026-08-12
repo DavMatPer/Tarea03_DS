@@ -5,16 +5,6 @@ import com.ticketbeat.interfaces.IBoleto;
 import com.ticketbeat.modelo.Comprador;
 import java.util.List;
 
-/**
- * notificarCompradores() y notificarResolucion() ahora usan realmente los
- * datos que reciben, en vez de ignorarlos e imprimir siempre el mismo mensaje
- * genérico (corrección del code smell "Código Muerto"). notificarCompradores
- * además usa IBoleto.getComprador() para notificar al comprador real de cada
- * boleto cuando ese vínculo existe, resolviendo la falta de relación
- * Boleto-Comprador señalada en las notas de diseño del plan de pruebas.
- *
- * @author Rafael Cosmo
- */
 public class GestorNotificaciones {
 
     public void iniciarProcesoDeNotificacion(List<Comprador> compradoresAfectados, String mensajeBase) {

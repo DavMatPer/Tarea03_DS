@@ -1,13 +1,5 @@
 package com.ticketbeat.modelo;
 
-/**
- * Antes solo exponía getNombre()/setNombre(); id, email y telefono se
- * heredaban pero ninguna subclase (Comprador, Organizador) podía usarlos
- * (code smell "Legado Rechazado"). Ahora los cuatro campos tienen accesores
- * públicos, disponibles para cualquier subclase.
- *
- * @author Rafael Cosmo
- */
 public abstract class Usuario {
     protected String id;
     protected String nombre;

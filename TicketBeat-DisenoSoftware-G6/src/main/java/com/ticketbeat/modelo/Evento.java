@@ -9,13 +9,6 @@ import com.ticketbeat.interfaces.IPoliticaCompra;
 import java.util.List;
 import java.util.ArrayList;
 
-/**
- * Ahora usa {@link EstadoEvento} en vez de un String libre (corrección del
- * code smell "Obsesión Primitiva") e incorpora
- * {@link #obtenerBoletosParaDevolucion()}, que antes vivía en la clase
- * externa PoliticaEvento operando casi exclusivamente sobre los datos de
- * Evento (corrección del code smell "Envidia de Características").
- */
 public class Evento {
     private String id;
     private String nombre;

@@ -5,17 +5,7 @@ import com.ticketbeat.manejador_incidente.ManejadorIncidente;
 import com.ticketbeat.manejador_incidente.AgenteSoporte;
 import com.ticketbeat.manejador_incidente.DepartamentoAdministracion;
 
-/**
- * Se eliminó el método legacy "reportarIncidente" (que duplicaba el flujo de
- * registrarIncidente y además recibía dos parámetros de tipo Object,
- * "agente"/"admin", que nunca usaba): corrección de los code smells
- * "Código Duplicado a Nivel de Responsabilidad", "Generalización
- * Especulativa" y "Lista de Parámetros Larga". Si además de registrar y
- * escalar un incidente se necesita notificar al comprador, ese paso ahora se
- * hace explícito en el llamador, con GestorNotificaciones.notificarResolucion(...).
- *
- * @author Rafael Cosmo
- */
+
 public class GestorIncidentes {
 
     private ManejadorIncidente cadenaSoporte;

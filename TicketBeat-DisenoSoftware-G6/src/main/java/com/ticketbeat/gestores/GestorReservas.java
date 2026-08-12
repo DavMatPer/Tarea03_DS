@@ -12,20 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-/**
- * Los métodos privados que antes eran cuerpos vacíos (reservarEntradas,
- * iniciarTemporizadorDeReserva, marcarEntradasComoVendidas,
- * generarBoletosDigitales, liberarEntradasReservadas) ahora tienen una
- * implementación real que opera sobre los boletos seleccionados y construye
- * una {@link Reserva} de verdad (corrección de los code smells "Código
- * Muerto" y "Clase Floja": Reserva no se usaba en ningún punto del sistema).
- *
- * marcarEntradasComoVendidas() además asigna el comprador a cada boleto
- * vendido (IBoleto.setComprador), completando el vínculo Boleto-Comprador
- * que antes no existía en el sistema.
- *
- * @author Rafael Cosmo
- */
 public class GestorReservas {
 
     private EstrategiaPago estrategiaPago;

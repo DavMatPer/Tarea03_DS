@@ -3,15 +3,7 @@ package com.ticketbeat.manejador_incidente;
 import com.ticketbeat.modelo.EstadoIncidente;
 import com.ticketbeat.modelo.Incidente;
 
-/**
- * Último eslabón de la cadena. Aplica resolución final
- * para cualquier incidente que llegue a este nivel.
- *
- * Ahora marca el incidente como EstadoIncidente.RESUELTO al aplicar la
- * resolución final, dando uso real al campo "estado" (antes inalcanzable).
- *
- * @author Rafael Cosmo
- */
+
 public class DepartamentoAdministracion extends ManejadorIncidente {
     private String idDepartamento;
 

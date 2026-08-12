@@ -1,11 +1,5 @@
 package com.ticketbeat.modelo;
 
-/**
- * Antes el campo "asunto" no tenía getter ni setter, por lo que era
- * inalcanzable desde fuera de la clase (code smell "Clase Floja").
- *
- * @author Rafael Cosmo
- */
 public class NotificacionMensaje {
     private String asunto;
     private String contenido;

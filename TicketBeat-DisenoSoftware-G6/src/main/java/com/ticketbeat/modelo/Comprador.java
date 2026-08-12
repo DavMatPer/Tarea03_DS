@@ -2,13 +2,6 @@ package com.ticketbeat.modelo;
 
 import com.ticketbeat.interfaces.ICanal;
 
-/**
- * setEdad() ahora valida su entrada en vez de aceptar cualquier valor,
- * incluidos negativos, sin control (corrección parcial del code smell
- * "Clase de Datos").
- *
- * @author Rafael Cosmo
- */
 public class Comprador extends Usuario {
     private ICanal canalPreferido;
     private int limiteCompra;

@@ -6,25 +6,6 @@ import com.ticketbeat.modelo.Pago;
 import java.util.Map;
 import java.util.UUID;
 
-/**
- * Superclase que concentra el flujo común a todas las estrategias de pago
- * (Template Method): construir el {@link Pago} resultante y registrar el
- * mensaje de reversión. Cada subclase concreta solo aporta el mensaje
- * específico de su medio de pago.
- *
- * Introducida para corregir dos code smells:
- * <ul>
- *   <li>"Código Duplicado": las tres estrategias (tarjeta, móvil,
- *       transferencia) repetían la misma construcción de {@link Pago} con
- *       {@code UUID.randomUUID()} y el mismo esqueleto de revertirPago().</li>
- *   <li>"Generalización Especulativa": el parámetro {@code datos} de
- *       procesarPago() no se usaba en ninguna estrategia. Aquí se aprovecha
- *       mediante {@link #obtenerDato(Map, String)} para leer un dato relevante
- *       (número de tarjeta, teléfono, cuenta) en cada subclase.</li>
- * </ul>
- *
- * @author Rafael Cosmo
- */
 public abstract class AbstractEstrategiaPago implements EstrategiaPago {
 
     @Override
