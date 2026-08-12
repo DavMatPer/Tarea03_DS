@@ -15,10 +15,10 @@ public class VerificacionEdadDecorator extends PoliticaDecorator {
     public boolean validarCompra(Comprador comprador, int cantidad) {
         if (comprador.getEdad() < edadMinima) {
             System.out.println("[VerificacionEdad] RECHAZADO: El comprador tiene "
-                + comprador.getEdad() + " años, pero la edad mínima es " + edadMinima + ".");
+                + comprador.getEdad() + " anios, pero la edad minima es " + edadMinima + ".");
             return false;
         }
-        System.out.println("[VerificacionEdad] OK: Edad " + comprador.getEdad() + " cumple con el mínimo de " + edadMinima + ".");
+        System.out.println("[VerificacionEdad] OK: Edad " + comprador.getEdad() + " cumple con el minimo de " + edadMinima + ".");
         return componente.validarCompra(comprador, cantidad);
     }
 }

@@ -1,13 +1,5 @@
 package com.ticketbeat.boletos.creadores;
 
-/**
- * Boleto de tipo General con una sección asignada.
- *
- * Ahora extiende {@link BoletoAbstracto}, que concentra id/estado/precio y
- * sus accesores (corrección del code smell "Código Duplicado").
- *
- * @author Rafael Cosmo
- */
 public class BoletoGeneral extends BoletoAbstracto {
     private String seccion;
 

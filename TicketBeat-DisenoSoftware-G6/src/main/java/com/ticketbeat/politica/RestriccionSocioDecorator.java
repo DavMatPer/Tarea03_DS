@@ -14,10 +14,10 @@ public class RestriccionSocioDecorator extends PoliticaDecorator {
     @Override
     public boolean validarCompra(Comprador comprador, int cantidad) {
         if (requiereMembresia && !comprador.isEsSocio()) {
-            System.out.println("[RestriccionSocio] RECHAZADO: Se requiere membresía y el comprador no es socio.");
+            System.out.println("[RestriccionSocio] RECHAZADO: Se requiere membresia y el comprador no es socio.");
             return false;
         }
-        System.out.println("[RestriccionSocio] OK: El comprador cumple con el requisito de membresía.");
+        System.out.println("[RestriccionSocio] OK: El comprador cumple con el requisito de membresia.");
         return componente.validarCompra(comprador, cantidad);
     }
 }

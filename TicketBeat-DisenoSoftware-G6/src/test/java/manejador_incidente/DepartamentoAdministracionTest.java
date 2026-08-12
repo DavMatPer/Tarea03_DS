@@ -29,8 +29,8 @@ public class DepartamentoAdministracionTest {
         departamento.manejarIncidente(incidente);
 
         String output = outContent.toString(StandardCharsets.UTF_8);
-        assertTrue(output.contains("Recibió incidente escalado."));
-        assertTrue(output.contains("Resolución final aplicada: Problema de acceso a boletos digitales"));
+        assertTrue(output.contains("Recibio incidente escalado."));
+        assertTrue(output.contains("Resolucion final aplicada: Problema de acceso a boletos digitales"));
         assertTrue(output.contains("Incidente cerrado exitosamente."));
     }
 

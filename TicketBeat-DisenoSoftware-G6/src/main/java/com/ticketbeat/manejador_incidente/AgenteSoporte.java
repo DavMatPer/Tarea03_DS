@@ -29,7 +29,7 @@ public class AgenteSoporte extends ManejadorIncidente {
             if (this.siguienteManejador != null) {
                 this.siguienteManejador.manejarIncidente(incidente);
             } else {
-                System.out.println("[AgenteSoporte] No hay más manejadores en la cadena.");
+                System.out.println("[AgenteSoporte] No hay mas manejadores en la cadena.");
             }
         }
     }

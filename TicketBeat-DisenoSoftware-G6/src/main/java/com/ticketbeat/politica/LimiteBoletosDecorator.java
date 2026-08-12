@@ -14,11 +14,11 @@ public class LimiteBoletosDecorator extends PoliticaDecorator {
     @Override
     public boolean validarCompra(Comprador comprador, int cantidad) {
         if (cantidad > limiteBoletoPorUsuario) {
-            System.out.println("[LimiteBoletos] RECHAZADO: Se intentó comprar " + cantidad
-                + " boletos, pero el límite es " + limiteBoletoPorUsuario + ".");
+            System.out.println("[LimiteBoletos] RECHAZADO: Se intento comprar " + cantidad
+                + " boletos, pero el limite es " + limiteBoletoPorUsuario + ".");
             return false;
         }
-        System.out.println("[LimiteBoletos] OK: Cantidad " + cantidad + " dentro del límite de " + limiteBoletoPorUsuario + ".");
+        System.out.println("[LimiteBoletos] OK: Cantidad " + cantidad + " dentro del limite de " + limiteBoletoPorUsuario + ".");
         return componente.validarCompra(comprador, cantidad);
     }
 }

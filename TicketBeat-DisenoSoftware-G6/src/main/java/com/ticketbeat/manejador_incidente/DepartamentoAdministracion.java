@@ -13,17 +13,17 @@ public class DepartamentoAdministracion extends ManejadorIncidente {
 
     @Override
     public void manejarIncidente(Incidente incidente) {
-        System.out.println("[DepartamentoAdministracion " + idDepartamento + "] Recibió incidente escalado.");
+        System.out.println("[DepartamentoAdministracion " + idDepartamento + "] Recibio incidente escalado.");
         resolucionFinal(incidente);
     }
 
     public void resolucionFinal(Incidente incidente) {
         incidente.setEstado(EstadoIncidente.RESUELTO);
-        System.out.println("[DepartamentoAdministracion " + idDepartamento + "] Resolución final aplicada: " 
+        System.out.println("[DepartamentoAdministracion " + idDepartamento + "] Resolucion final aplicada: " 
             + incidente.getDescripcion());
         System.out.println("[DepartamentoAdministracion] Incidente cerrado exitosamente.");
     }
 }
 /*
- * Manejador Abstracto - Patrón Chain of Responsibility
+ * Manejador Abstracto - Patron Chain of Responsibility
  */

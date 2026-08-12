@@ -21,8 +21,8 @@ public class GestorNotificaciones {
                 registrarEstadoDeEntrega();
             } else {
                 System.out.println("Canal no disponible, intentar siguiente canal");
-                // Lógica de reintento o encolamiento
-                System.out.println("Encolar notificación para reintento");
+                // Logica de reintento o encolamiento
+                System.out.println("Encolar notificacion para reintento");
             }
         }
     }
@@ -56,7 +56,7 @@ public class GestorNotificaciones {
             System.out.println("No hay boletos afectados; no se envían notificaciones.");
             return;
         }
-        System.out.println("Enviando notificación masiva a " + afectados.size()
+        System.out.println("Enviando notificacion masiva a " + afectados.size()
                 + " boleto(s) afectado(s): " + mensaje);
         for (IBoleto boleto : afectados) {
             Comprador comprador = boleto.getComprador();
@@ -81,11 +81,11 @@ public class GestorNotificaciones {
      */
     public void notificarResolucion(Comprador comprador, String mensaje) {
         if (comprador == null) {
-            System.out.println("No se pudo notificar la resolución: comprador no especificado.");
+            System.out.println("No se pudo notificar la resolucion: comprador no especificado.");
             return;
         }
         String nombre = (comprador.getNombre() != null) ? comprador.getNombre() : "comprador";
-        System.out.println("Notificando resolución a " + nombre + ": " + mensaje);
+        System.out.println("Notificando resolucion a " + nombre + ": " + mensaje);
         if (comprador.getCanalPreferido() != null) {
             comprador.getCanalPreferido().enviar(mensaje);
         }

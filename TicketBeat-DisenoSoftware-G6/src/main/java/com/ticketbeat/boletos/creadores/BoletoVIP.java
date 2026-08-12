@@ -2,14 +2,6 @@ package com.ticketbeat.boletos.creadores;
 
 import java.util.Arrays;
 
-/**
- * Boleto de tipo VIP con zona exclusiva y beneficios adicionales.
- *
- * Ahora extiende {@link BoletoAbstracto} (corrección del code smell "Código
- * Duplicado").
- *
- * @author Rafael Cosmo
- */
 public class BoletoVIP extends BoletoAbstracto {
     private String zonaVIP;
     private String[] beneficios;

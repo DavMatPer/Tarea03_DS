@@ -65,7 +65,7 @@ public class GestorReservas {
     }
 
     private void iniciarTemporizadorDeReserva() {
-        System.out.println("Temporizador de expiración de reserva iniciado (15 minutos).");
+        System.out.println("Temporizador de expiracion de reserva iniciado (15 minutos).");
     }
 
     public void confirmarCompra(double monto, Map<String, String> datos) {
@@ -77,10 +77,10 @@ public class GestorReservas {
         Pago pago = this.estrategiaPago.procesarPago(monto, datos);
 
         if (pago != null && pago.estaCompletado()) {
-            System.out.println("Confirmación de pago (ID: " + pago.getId() + ")");
+            System.out.println("Confirmacion de pago (ID: " + pago.getId() + ")");
             marcarEntradasComoVendidas();
             generarBoletosDigitales();
-            System.out.println("Confirmación de compra y boletos");
+            System.out.println("Confirmacion de compra y boletos");
         } else {
             System.out.println("Pago rechazado");
             System.out.println("Informar error y permitir reintento");
@@ -102,7 +102,7 @@ public class GestorReservas {
 
     public void tiempoDeReservaExpirado() {
         liberarEntradasReservadas();
-        System.out.println("Informar expiración de reserva");
+        System.out.println("Informar expiracion de reserva");
     }
 
     private void liberarEntradasReservadas() {

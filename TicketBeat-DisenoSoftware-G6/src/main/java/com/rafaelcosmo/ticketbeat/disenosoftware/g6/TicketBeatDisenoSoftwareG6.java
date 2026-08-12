@@ -41,7 +41,7 @@ public class TicketBeatDisenoSoftwareG6 {
         demostrarChainOfResponsibility();
 
         System.out.println("\n=================================================");
-        System.out.println("          FIN DE LA SIMULACIÓN - GRUPO 6");
+        System.out.println("          FIN DE LA SIMULACIoN - GRUPO 6");
         System.out.println("=================================================");
     }
 
@@ -56,10 +56,10 @@ public class TicketBeatDisenoSoftwareG6 {
     }
 
     // =================================================================
-    // PRUEBA PATRON 1 - FACTORY METHOD: Creación de Boletos
+    // PRUEBA PATRON 1 - FACTORY METHOD: Creacion de Boletos
     // =================================================================
     private static List<IBoleto> demostrarFactoryMethod() {
-        System.out.println("=== PRUEBA FACTORY METHOD: CREACIÓN DE BOLETOS ===\n");
+        System.out.println("=== PRUEBA FACTORY METHOD: CREACIoN DE BOLETOS ===\n");
 
         // Se crean los creadores concretos 
         CreadorBoleto creadorVIP = new CreadorBoletoVIP();
@@ -76,8 +76,8 @@ public class TicketBeatDisenoSoftwareG6 {
         System.out.println("\n>> Emitiendo Boleto Reservado:");
         creadorReservado.procesarEmision();
 
-        // Verificación: crear boletos via Factory y confirmar tipos
-        System.out.println("\n>> Verificación de instancias creadas via Factory Method:");
+        // Verificacion: crear boletos via Factory y confirmar tipos
+        System.out.println("\n>> Verificacion de instancias creadas via Factory Method:");
         IBoleto boletoVip = creadorVIP.crearBoleto();
         IBoleto boletoGen = creadorGeneral.crearBoleto();
         IBoleto boletoRes = creadorReservado.crearBoleto();
@@ -109,7 +109,7 @@ public class TicketBeatDisenoSoftwareG6 {
         gestorReservas.elegirCantidadYTipoDeEntrada();
 
         // Pago con Tarjeta
-        System.out.println("\n>> Comprador selecciona: Tarjeta de Crédito (VISA)");
+        System.out.println("\n>> Comprador selecciona: Tarjeta de Credito (VISA)");
         EstrategiaPago tarjetaStrategy = new PagoTarjetaStrategy("VISA");
         gestorReservas.setEstrategiaPago(tarjetaStrategy);
 
@@ -118,8 +118,8 @@ public class TicketBeatDisenoSoftwareG6 {
         datosTarjeta.put("cvv", "123");
         gestorReservas.confirmarCompra(150.50, datosTarjeta);
 
-        // Cambio dinámico de estrategia a Pago Móvil
-        System.out.println("\n>> Comprador cambia estrategia en tiempo de ejecución: Pago Móvil");
+        // Cambio dinamico de estrategia a Pago Movil
+        System.out.println("\n>> Comprador cambia estrategia en tiempo de ejecucion: Pago Movil");
         EstrategiaPago movilStrategy = new PagoMovilStrategy("PagoFlash");
         gestorReservas.setEstrategiaPago(movilStrategy);
 
@@ -127,7 +127,7 @@ public class TicketBeatDisenoSoftwareG6 {
         datosMovil.put("telefono", "0412-1234567");
         gestorReservas.confirmarCompra(200.00, datosMovil);
 
-        // Cambio dinámico a Transferencia
+        // Cambio dinamico a Transferencia
         System.out.println("\n>> Comprador cambia estrategia otra vez: Transferencia Bancaria");
         EstrategiaPago transferenciaStrategy = new PagoTransferenciaStrategy("Banco Nacional");
         gestorReservas.setEstrategiaPago(transferenciaStrategy);
@@ -140,44 +140,44 @@ public class TicketBeatDisenoSoftwareG6 {
     }
 
     // =================================================================
-    // PRUEBA PATRON 3 - DECORATOR: Políticas y Restricciones
+    // PRUEBA PATRON 3 - DECORATOR: Politicas y Restricciones
     // =================================================================
     private static Evento demostrarDecorator(Comprador comprador) {
-        System.out.println("=== PRUEBA DECORATOR: POLÍTICAS Y RESTRICCIONES ===\n");
+        System.out.println("=== PRUEBA DECORATOR: POLiTICAS Y RESTRICCIONES ===\n");
 
         Evento concierto = new Evento();
         concierto.setNombre("Concierto de Rock");
 
-        // Construir política con múltiples decoradores envueltos
+        // Construir politica con múltiples decoradores envueltos
         IPoliticaCompra politicaDecorada = new VerificacionEdadDecorator(
             new LimiteBoletosDecorator(
                 new PoliticaEventoBase(), 4
             ), 18
         );
 
-        // Asignar la política decorada al evento
+        // Asignar la politica decorada al evento
         concierto.setPolitica(politicaDecorada);
 
-        // Prueba 1: Compra VÁLIDA (edad 25, cantidad 3)
-        System.out.println(">> Prueba 1: Comprador de 25 años quiere 3 boletos (límite: 4, edad mín: 18)");
+        // Prueba 1: Compra VaLIDA (edad 25, cantidad 3)
+        System.out.println(">> Prueba 1: Comprador de 25 anios quiere 3 boletos (limite: 4, edad min: 18)");
         boolean resultado1 = concierto.getPolitica().validarCompra(comprador, 3);
         System.out.println("Resultado: " + (resultado1 ? "APROBADA" : "RECHAZADA") + "\n");
 
-        // Prueba 2: Compra INVÁLIDA por cantidad (edad 25, cantidad 6)
-        System.out.println(">> Prueba 2: Comprador de 25 años quiere 6 boletos (límite: 4)");
+        // Prueba 2: Compra INVaLIDA por cantidad (edad 25, cantidad 6)
+        System.out.println(">> Prueba 2: Comprador de 25 anios quiere 6 boletos (limite: 4)");
         boolean resultado2 = concierto.getPolitica().validarCompra(comprador, 6);
         System.out.println("Resultado: " + (resultado2 ? "APROBADA" : "RECHAZADA") + "\n");
 
-        // Prueba 3: Compra INVÁLIDA por edad (menor de 18)
+        // Prueba 3: Compra INVaLIDA por edad (menor de 18)
         Comprador compradorMenor = new Comprador();
         compradorMenor.setNombre("Pedro Menor");
         compradorMenor.setEdad(15);
-        System.out.println(">> Prueba 3: Comprador de 15 años quiere 2 boletos (edad mín: 18)");
+        System.out.println(">> Prueba 3: Comprador de 15 anios quiere 2 boletos (edad min: 18)");
         boolean resultado3 = concierto.getPolitica().validarCompra(compradorMenor, 2);
         System.out.println("Resultado: " + (resultado3 ? "APROBADA" : "RECHAZADA") + "\n");
 
-        // Prueba 4: Agregar decorador de membresía
-        System.out.println(">> Prueba 4: Agregar restricción de membresía");
+        // Prueba 4: Agregar decorador de membresia
+        System.out.println(">> Prueba 4: Agregar restriccion de membresia");
         IPoliticaCompra politicaConMembresia = new RestriccionSocioDecorator(
             new VerificacionEdadDecorator(
                 new LimiteBoletosDecorator(
@@ -190,11 +190,11 @@ public class TicketBeatDisenoSoftwareG6 {
         compradorNoSocio.setNombre("Carlos NoSocio");
         compradorNoSocio.setEdad(30);
         compradorNoSocio.setEsSocio(false);
-        System.out.println("Comprador NO socio, 30 años, 2 boletos:");
+        System.out.println("Comprador NO socio, 30 anios, 2 boletos:");
         boolean resultado4 = politicaConMembresia.validarCompra(compradorNoSocio, 2);
         System.out.println("Resultado: " + (resultado4 ? "APROBADA" : "RECHAZADA") + "\n");
 
-        System.out.println("Comprador SÍ socio, 25 años, 2 boletos:");
+        System.out.println("Comprador Si socio, 25 anios, 2 boletos:");
         boolean resultado5 = politicaConMembresia.validarCompra(comprador, 2);
         System.out.println("Resultado: " + (resultado5 ? "APROBADA" : "RECHAZADA"));
 
@@ -203,10 +203,10 @@ public class TicketBeatDisenoSoftwareG6 {
     }
 
     // =================================================================
-    // PRUEBA GESTOR DE EVENTOS: Cancelación y devolución
+    // PRUEBA GESTOR DE EVENTOS: Cancelacion y devolucion
     // =================================================================
     private static void demostrarCancelacionEvento(Evento concierto, List<IBoleto> boletosEmitidos, GestorNotificaciones gestorNotif) {
-        System.out.println("=== PRUEBA GESTOR DE EVENTOS: CANCELACIÓN Y DEVOLUCIÓN ===\n");
+        System.out.println("=== PRUEBA GESTOR DE EVENTOS: CANCELACIoN Y DEVOLUCIoN ===\n");
 
         for (IBoleto boleto : boletosEmitidos) {
             concierto.agregarBoleto(boleto);
@@ -222,20 +222,20 @@ public class TicketBeatDisenoSoftwareG6 {
     }
 
     // =================================================================
-    // PRUEBA PATRON 4 - CHAIN OF RESPONSIBILITY: Gestión de Incidentes
+    // PRUEBA PATRON 4 - CHAIN OF RESPONSIBILITY: Gestion de Incidentes
     // =================================================================
     private static void demostrarChainOfResponsibility() {
-        System.out.println("=== PRUEBA CHAIN OF RESPONSIBILITY: GESTIÓN DE INCIDENTES ===\n");
+        System.out.println("=== PRUEBA CHAIN OF RESPONSIBILITY: GESTIoN DE INCIDENTES ===\n");
         GestorIncidentes gestorIncidentes = new GestorIncidentes();
 
         // Incidente simple: resuelto en primer nivel por AgenteSoporte
         System.out.println(">> Incidente 1 (Simple): Resuelto en primer nivel");
-        gestorIncidentes.registrarIncidente("El código QR del boleto no carga en la app");
+        gestorIncidentes.registrarIncidente("El codigo QR del boleto no carga en la app");
 
         System.out.println();
 
-        // Incidente complejo: escala automáticamente a DepartamentoAdministracion
-        System.out.println(">> Incidente 2 (Complejo): Escala automáticamente al siguiente nivel");
+        // Incidente complejo: escala automaticamente a DepartamentoAdministracion
+        System.out.println(">> Incidente 2 (Complejo): Escala automaticamente al siguiente nivel");
         gestorIncidentes.registrarIncidente("Problema complejo con doble cobro y reembolso pendiente");
     }
 }

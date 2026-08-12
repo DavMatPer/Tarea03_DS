@@ -3,14 +3,6 @@
  */
 package com.ticketbeat.boletos.creadores;
 
-/**
- * Boleto de tipo Reservado con asiento y fila específicos.
- *
- * Ahora extiende {@link BoletoAbstracto} (corrección del code smell "Código
- * Duplicado").
- *
- * @author Rafael Cosmo
- */
 public class BoletoReservado extends BoletoAbstracto {
     private String numeroAsiento;
     private String fila;
