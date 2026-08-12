@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.ticketbeat.estrategia_pago.PagoTransferenciaStrategyTest
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.067 s -- in com.ticketbeat.estrategia_pago.PagoTransferenciaStrategyTest
