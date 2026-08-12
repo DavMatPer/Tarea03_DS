@@ -204,11 +204,8 @@ public class TicketBeatDisenoSoftwareG6 {
 
     // =================================================================
     // PRUEBA GESTOR DE EVENTOS: Cancelación y devolución
-    // (antes no se demostraba en main(); ahora se aprovecha para mostrar
-    //  el flujo unificado de IPoliticaCompra.aplicarPoliticaDevolucion)
     // =================================================================
-    private static void demostrarCancelacionEvento(Evento concierto, List<IBoleto> boletosEmitidos,
-                                                     GestorNotificaciones gestorNotif) {
+    private static void demostrarCancelacionEvento(Evento concierto, List<IBoleto> boletosEmitidos, GestorNotificaciones gestorNotif) {
         System.out.println("=== PRUEBA GESTOR DE EVENTOS: CANCELACIÓN Y DEVOLUCIÓN ===\n");
 
         for (IBoleto boleto : boletosEmitidos) {
