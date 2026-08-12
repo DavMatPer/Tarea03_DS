@@ -1,7 +1,7 @@
 /*
  * Producto Abstracto - Patrón Factory Method
  */
-package com.ticketbeat.boletos.creaciones;
+package com.ticketbeat.boletos.creadores;
 
 import com.ticketbeat.interfaces.IBoleto;
 import com.ticketbeat.modelo.Comprador;

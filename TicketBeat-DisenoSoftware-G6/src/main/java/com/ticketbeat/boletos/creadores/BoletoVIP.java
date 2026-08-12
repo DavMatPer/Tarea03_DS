@@ -1,4 +1,4 @@
-package com.ticketbeat.boletos.creaciones;
+package com.ticketbeat.boletos.creadores;
 
 import java.util.Arrays;
 

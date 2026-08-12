@@ -1,4 +1,4 @@
-package com.ticketbeat.boletos.creaciones;
+package com.ticketbeat.boletos.creadores;
 
 /**
  * Boleto de tipo General con una sección asignada.

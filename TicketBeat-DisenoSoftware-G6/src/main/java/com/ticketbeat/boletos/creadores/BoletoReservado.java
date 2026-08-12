@@ -1,7 +1,7 @@
 /*
  * Producto Concreto - Patrón Factory Method
  */
-package com.ticketbeat.boletos.creaciones;
+package com.ticketbeat.boletos.creadores;
 
 /**
  * Boleto de tipo Reservado con asiento y fila específicos.
