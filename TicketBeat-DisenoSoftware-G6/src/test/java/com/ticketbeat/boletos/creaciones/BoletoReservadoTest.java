@@ -5,6 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Pruebas para BoletoReservado.
+ */
 public class BoletoReservadoTest {
 
     private BoletoReservado boleto;
@@ -15,60 +18,63 @@ public class BoletoReservadoTest {
     }
 
     /**
-     * Test case TC-BR-001 from plan_pruebas.md
+     * Caso de prueba TC-BR-001 del plan de pruebas.
      */
     @Test
-    public void testSetNumeroAsiento_Típico() {
-        String nuevoAsiento = "B-202";
-        boleto.setNumeroAsiento(nuevoAsiento);
-        assertEquals(nuevoAsiento, boleto.getNumeroAsiento());
+    public void testSetNumeroAsiento_Tipico() {
+        boleto.setNumeroAsiento("101");
+        assertEquals("101", boleto.getNumeroAsiento());
     }
 
     /**
-     * Test case TC-BR-002 from plan_pruebas.md
+     * Caso de prueba TC-BR-002 del plan de pruebas.
+     *
+     * CORREGIDO: se eliminó la expectativa ambigua ("lanza NPE o es manejado
+     * incorrectamente"); setNumeroAsiento es una asignación directa que no
+     * lanza excepción.
      */
     @Test
-    public void testSetNumeroAsiento_Error_Nulo() {
-        // Current implementation accepts null without validation.
+    public void testSetNumeroAsiento_Error_NumeroNulo() {
         boleto.setNumeroAsiento(null);
         assertNull(boleto.getNumeroAsiento());
     }
 
     /**
-     * Test case TC-BR-003 from plan_pruebas.md
+     * Caso de prueba TC-BR-003 del plan de pruebas.
      */
     @Test
-    public void testSetFila_Típico() {
-        String nuevaFila = "Fila 10";
-        boleto.setFila(nuevaFila);
-        assertEquals(nuevaFila, boleto.getFila());
+    public void testSetFila_Tipico() {
+        boleto.setFila("A");
+        assertEquals("A", boleto.getFila());
     }
 
     /**
-     * Test case TC-BR-004 from plan_pruebas.md
+     * Caso de prueba TC-BR-004 del plan de pruebas.
+     *
+     * CORREGIDO: setFila es una asignación directa; no lanza excepción.
      */
     @Test
-    public void testSetFila_Error_Nulo() {
-        // Current implementation accepts null without validation.
+    public void testSetFila_Error_FilaNula() {
         boleto.setFila(null);
         assertNull(boleto.getFila());
     }
 
     /**
-     * Test case TC-BR-005 from plan_pruebas.md
+     * Caso de prueba TC-BR-005 del plan de pruebas.
      */
     @Test
-    public void testSetEstado_Típico() {
+    public void testSetEstado_Tipico() {
         boleto.setEstado(EstadoBoleto.VENDIDO);
         assertEquals(EstadoBoleto.VENDIDO, boleto.getEstado());
     }
 
     /**
-     * Test case TC-BR-006 from plan_pruebas.md
+     * Caso de prueba TC-BR-006 del plan de pruebas.
+     *
+     * CORREGIDO: setEstado es una asignación directa; no lanza excepción.
      */
     @Test
-    public void testSetEstado_Error_Nulo() {
-        // Current implementation accepts null without validation.
+    public void testSetEstado_Error_EstadoNulo() {
         boleto.setEstado(null);
         assertNull(boleto.getEstado());
     }

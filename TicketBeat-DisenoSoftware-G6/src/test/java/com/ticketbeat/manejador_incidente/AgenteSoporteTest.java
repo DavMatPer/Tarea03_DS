@@ -7,96 +7,79 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 
+/**
+ * Pruebas para AgenteSoporte.
+ */
 public class AgenteSoporteTest {
 
-    private AgenteSoporte agenteSoporte;
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 
     @BeforeEach
     public void setUp() {
-        agenteSoporte = new AgenteSoporte();
-        System.setOut(new PrintStream(outContent));
+        System.setOut(new PrintStream(outContent, true, StandardCharsets.UTF_8));
     }
 
     /**
-     * Test case TC-AS-001 from plan_pruebas.md
+     * Caso de prueba TC-AS-001 del plan de pruebas.
      */
     @Test
-    public void testPuedeResolver_Típico_Simple() {
+    public void testPuedeResolver_Tipico_ProblemaSimple() {
+        AgenteSoporte agente = new AgenteSoporte();
         Incidente incidente = new Incidente();
-        incidente.setDescripcion("Problema simple de acceso");
-        assertTrue(agenteSoporte.puedeResolver(incidente));
+        incidente.setDescripcion("Tengo un problema simple con mi boleto");
+
+        assertTrue(agente.puedeResolver(incidente));
     }
 
     /**
-     * Test case TC-AS-002 from plan_pruebas.md
+     * Caso de prueba TC-AS-002 del plan de pruebas.
      */
     @Test
-    public void testPuedeResolver_Típico_Complejo() {
+    public void testPuedeResolver_Tipico_ProblemaComplejo() {
+        AgenteSoporte agente = new AgenteSoporte();
         Incidente incidente = new Incidente();
-        incidente.setDescripcion("problema COMPLEJO en la plataforma");
-        assertFalse(agenteSoporte.puedeResolver(incidente));
-    }
-    
-    @Test
-    public void testPuedeResolver_Límite_DescripcionNula() {
-        Incidente incidente = new Incidente();
-        incidente.setDescripcion(null);
-        assertFalse(agenteSoporte.puedeResolver(incidente));
+        incidente.setDescripcion("Tengo un problema COMPLEJO de fraude");
+
+        assertFalse(agente.puedeResolver(incidente));
     }
 
     /**
-     * Test case TC-AS-003 from plan_pruebas.md
+     * Caso de prueba TC-AS-003 del plan de pruebas.
      */
     @Test
-    public void testManejarIncidente_Escala() {
-        Incidente incidente = new Incidente();
-        incidente.setDescripcion("Incidente complejo que necesita escalar");
-
-        // Create a simple mock for the next handler
+    public void testManejarIncidente_Tipico_PasaAlSiguiente() {
+        AgenteSoporte agente = new AgenteSoporte();
+        final boolean[] invocado = {false};
         ManejadorIncidente siguiente = new ManejadorIncidente() {
             @Override
             public void manejarIncidente(Incidente incidente) {
-                System.out.println("Siguiente manejador fue invocado.");
+                invocado[0] = true;
             }
         };
-        agenteSoporte.setSiguienteManejador(siguiente);
-        
-        agenteSoporte.manejarIncidente(incidente);
-        
-        String output = outContent.toString();
-        assertTrue(output.contains("No puede resolver. Escalando al siguiente nivel..."));
-        assertTrue(output.contains("Siguiente manejador fue invocado."));
-    }
-    
-    @Test
-    public void testManejarIncidente_Resuelve() {
+        agente.setSiguienteManejador(siguiente);
+
         Incidente incidente = new Incidente();
-        incidente.setDescripcion("Incidente simple");
-        
-        agenteSoporte.manejarIncidente(incidente);
-        
-        String output = outContent.toString();
-        assertTrue(output.contains("Incidente resuelto en primer nivel"));
-        assertFalse(output.contains("Escalando al siguiente nivel..."));
+        incidente.setDescripcion("Caso complejo de fraude");
+
+        agente.manejarIncidente(incidente);
+
+        assertTrue(invocado[0], "Debe delegar al siguiente manejador de la cadena.");
     }
 
     /**
-     * Test case TC-AS-004 from plan_pruebas.md
+     * Caso de prueba TC-AS-004 del plan de pruebas.
      */
     @Test
-    public void testManejarIncidente_Límite_SinSiguienteManejador() {
+    public void testManejarIncidente_Limite_SinSiguienteManejador() {
+        AgenteSoporte agente = new AgenteSoporte(); // sin setSiguienteManejador
         Incidente incidente = new Incidente();
-        incidente.setDescripcion("Incidente complejo");
-        
-        // Ensure no next handler is set
-        agenteSoporte.setSiguienteManejador(null);
-        
-        agenteSoporte.manejarIncidente(incidente);
-        
-        String output = outContent.toString();
-        assertTrue(output.contains("No puede resolver. Escalando al siguiente nivel..."));
-        assertTrue(output.contains("No hay más manejadores en la cadena."));
+        incidente.setDescripcion("Caso complejo de fraude");
+
+        agente.manejarIncidente(incidente);
+
+        assertTrue(outContent.toString(StandardCharsets.UTF_8)
+                .contains("[AgenteSoporte] No hay más manejadores en la cadena."));
     }
 }

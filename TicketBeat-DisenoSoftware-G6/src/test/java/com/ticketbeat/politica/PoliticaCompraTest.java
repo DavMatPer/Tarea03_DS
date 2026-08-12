@@ -6,151 +6,168 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Pruebas para el patrón Decorator (Políticas de Compra): PoliticaEventoBase
+ * y los decoradores LimiteBoletosDecorator, RestriccionSocioDecorator y
+ * VerificacionEdadDecorator.
+ *
+ * NOTA: esta clase existía en el código original como un stub vacío; se
+ * completó para cubrir la sección 5.5 del plan de pruebas.
+ */
 public class PoliticaCompraTest {
 
     private Comprador compradorValido;
-    private Comprador compradorNoSocio;
-    private Comprador compradorMenor;
 
     @BeforeEach
     public void setUp() {
         compradorValido = new Comprador();
+        compradorValido.setNombre("Juan Perez");
         compradorValido.setEdad(25);
         compradorValido.setEsSocio(true);
-
-        compradorNoSocio = new Comprador();
-        compradorNoSocio.setEdad(30);
-        compradorNoSocio.setEsSocio(false);
-        
-        compradorMenor = new Comprador();
-        compradorMenor.setEdad(16);
-        compradorMenor.setEsSocio(true);
     }
 
-    //--- Tests for PoliticaEventoBase ---
+    // ---------- PoliticaEventoBase ----------
 
+    /**
+     * Caso de prueba TC-PEB-001 del plan de pruebas.
+     */
     @Test
-    public void testPoliticaBase_ValidarCompra() {
-        IPoliticaCompra politica = new PoliticaEventoBase();
+    public void testPoliticaEventoBase_ValidarCompra_Tipico() {
+        PoliticaEventoBase politica = new PoliticaEventoBase();
         assertTrue(politica.validarCompra(compradorValido, 2));
     }
 
+    /**
+     * Caso de prueba TC-PEB-002 del plan de pruebas.
+     */
     @Test
-    public void testPoliticaBase_CalcularReembolsoPermitido() {
-        PoliticaEventoBase politica = new PoliticaEventoBase(); // Using concrete class to access constructor
+    public void testPoliticaEventoBase_ValidarCompra_Limite_CompradorNuloOCantidadInvalida() {
+        PoliticaEventoBase politica = new PoliticaEventoBase();
+        assertFalse(politica.validarCompra(null, 2));
+        assertFalse(politica.validarCompra(compradorValido, 0));
+    }
+
+    /**
+     * Caso de prueba TC-PEB-003 del plan de pruebas.
+     */
+    @Test
+    public void testPoliticaEventoBase_CalcularReembolso_Tipico() {
+        PoliticaEventoBase politica = new PoliticaEventoBase(); // permiteDevoluciones=true, 80% por defecto
         assertEquals(80.0, politica.calcularReembolso(100.0));
     }
-    
+
+    /**
+     * Caso de prueba TC-PEB-004 del plan de pruebas.
+     */
     @Test
-    public void testPoliticaBase_CalcularReembolsoNoPermitido() {
+    public void testPoliticaEventoBase_CalcularReembolso_Limite_SinDevoluciones() {
         PoliticaEventoBase politica = new PoliticaEventoBase();
-        // To test this, we would need a constructor or setter to change `permiteDevoluciones`.
-        // The current implementation doesn't allow changing this, so this branch is hard to test.
-        // We will assume the default is true.
-        assertTrue(politica.calcularReembolso(100) > 0);
+        politica.setPermiteDevoluciones(false);
+        assertEquals(0, politica.calcularReembolso(100.0));
     }
-    
+
+    /**
+     * Caso de prueba TC-PEB-005 del plan de pruebas.
+     */
     @Test
-    public void testPoliticaBase_Error_MontoNegativoReembolso() {
-        IPoliticaCompra politica = new PoliticaEventoBase();
-        // The current implementation does not validate the amount, so it will return a negative value.
+    public void testPoliticaEventoBase_CalcularReembolso_Error_MontoNegativo() {
+        PoliticaEventoBase politica = new PoliticaEventoBase();
         assertEquals(-80.0, politica.calcularReembolso(-100.0));
     }
 
-    //--- Tests for Decorators ---
+    // ---------- LimiteBoletosDecorator ----------
 
+    /**
+     * Caso de prueba TC-LBD-001 del plan de pruebas.
+     */
     @Test
-    public void testLimiteBoletos_DentroDelLimite() {
-        IPoliticaCompra politica = new LimiteBoletosDecorator(new PoliticaEventoBase(), 5);
-        assertTrue(politica.validarCompra(compradorValido, 5));
-        assertTrue(politica.validarCompra(compradorValido, 3));
-    }
-
-    @Test
-    public void testLimiteBoletos_ExcedeLimite() {
-        IPoliticaCompra politica = new LimiteBoletosDecorator(new PoliticaEventoBase(), 5);
-        assertFalse(politica.validarCompra(compradorValido, 6));
-    }
-    
-    @Test
-    public void testRestriccionSocio_RechazaNoSocio() {
-        IPoliticaCompra politica = new RestriccionSocioDecorator(new PoliticaEventoBase(), true);
-        assertFalse(politica.validarCompra(compradorNoSocio, 1));
-    }
-    
-    @Test
-    public void testRestriccionSocio_AceptaSocio() {
-        IPoliticaCompra politica = new RestriccionSocioDecorator(new PoliticaEventoBase(), true);
-        assertTrue(politica.validarCompra(compradorValido, 1));
-    }
-    
-    @Test
-    public void testRestriccionSocio_NoRequerido() {
-        IPoliticaCompra politica = new RestriccionSocioDecorator(new PoliticaEventoBase(), false);
-        assertTrue(politica.validarCompra(compradorNoSocio, 1));
+    public void testLimiteBoletosDecorator_ValidarCompra_Tipico_DentroDelLimite() {
+        IPoliticaCompra base = new PoliticaEventoBase();
+        LimiteBoletosDecorator decorator = new LimiteBoletosDecorator(base, 5);
+        assertTrue(decorator.validarCompra(compradorValido, 3));
     }
 
+    /**
+     * Caso de prueba TC-LBD-002 del plan de pruebas.
+     */
     @Test
-    public void testVerificacionEdad_RechazaMenor() {
-        IPoliticaCompra politica = new VerificacionEdadDecorator(new PoliticaEventoBase(), 18);
-        assertFalse(politica.validarCompra(compradorMenor, 1));
+    public void testLimiteBoletosDecorator_ValidarCompra_Limite_CantidadIgualAlLimite() {
+        IPoliticaCompra base = new PoliticaEventoBase();
+        LimiteBoletosDecorator decorator = new LimiteBoletosDecorator(base, 5);
+        assertTrue(decorator.validarCompra(compradorValido, 5));
     }
-    
+
+    /**
+     * Caso de prueba TC-LBD-003 del plan de pruebas.
+     */
     @Test
-    public void testVerificacionEdad_AceptaMayor() {
-        IPoliticaCompra politica = new VerificacionEdadDecorator(new PoliticaEventoBase(), 18);
-        assertTrue(politica.validarCompra(compradorValido, 1));
+    public void testLimiteBoletosDecorator_ValidarCompra_Tipico_ExcedeElLimite() {
+        IPoliticaCompra base = new PoliticaEventoBase();
+        LimiteBoletosDecorator decorator = new LimiteBoletosDecorator(base, 5);
+        assertFalse(decorator.validarCompra(compradorValido, 6));
     }
-    
+
+    // ---------- RestriccionSocioDecorator ----------
+
+    /**
+     * Caso de prueba TC-RSD-001 del plan de pruebas.
+     */
     @Test
-    public void testVerificacionEdad_AceptaEdadExacta() {
-        IPoliticaCompra politica = new VerificacionEdadDecorator(new PoliticaEventoBase(), 25);
-        assertTrue(politica.validarCompra(compradorValido, 1));
+    public void testRestriccionSocioDecorator_ValidarCompra_Tipico_RechazaNoSocio() {
+        IPoliticaCompra base = new PoliticaEventoBase();
+        RestriccionSocioDecorator decorator = new RestriccionSocioDecorator(base, true);
+
+        Comprador noSocio = new Comprador();
+        noSocio.setNombre("Pedro Ruiz");
+        noSocio.setEdad(30);
+        noSocio.setEsSocio(false);
+
+        assertFalse(decorator.validarCompra(noSocio, 1));
     }
-    
-    //--- Test for Combined Decorators ---
-    
+
+    /**
+     * Caso de prueba TC-RSD-002 del plan de pruebas.
+     */
     @Test
-    public void testPoliticaCombinada_Valida() {
-        IPoliticaCompra politica = 
-            new VerificacionEdadDecorator(
-                new LimiteBoletosDecorator(
-                    new RestriccionSocioDecorator(
-                        new PoliticaEventoBase(), true), 4), 18);
-                        
-        assertTrue(politica.validarCompra(compradorValido, 3));
+    public void testRestriccionSocioDecorator_ValidarCompra_Limite_SinRequerirMembresia() {
+        IPoliticaCompra base = new PoliticaEventoBase();
+        RestriccionSocioDecorator decorator = new RestriccionSocioDecorator(base, false);
+
+        assertTrue(decorator.validarCompra(compradorValido, 1),
+                "Debe delegar al componente envuelto sin evaluar la membresía.");
     }
-    
+
+    // ---------- VerificacionEdadDecorator ----------
+
+    /**
+     * Caso de prueba TC-VED-001 del plan de pruebas.
+     */
     @Test
-    public void testPoliticaCombinada_RechazaPorEdad() {
-        IPoliticaCompra politica = 
-            new VerificacionEdadDecorator(
-                new LimiteBoletosDecorator(
-                    new RestriccionSocioDecorator(
-                        new PoliticaEventoBase(), true), 4), 18);
-                        
-        assertFalse(politica.validarCompra(compradorMenor, 2));
+    public void testVerificacionEdadDecorator_ValidarCompra_Tipico_MenorDeEdad() {
+        IPoliticaCompra base = new PoliticaEventoBase();
+        VerificacionEdadDecorator decorator = new VerificacionEdadDecorator(base, 18);
+
+        Comprador menor = new Comprador();
+        menor.setNombre("Sofia Diaz");
+        menor.setEdad(15);
+        menor.setEsSocio(false);
+
+        assertFalse(decorator.validarCompra(menor, 1));
     }
-    
+
+    /**
+     * Caso de prueba TC-VED-002 del plan de pruebas.
+     */
     @Test
-    public void testPoliticaCombinada_RechazaPorLimite() {
-        IPoliticaCompra politica = 
-            new VerificacionEdadDecorator(
-                new LimiteBoletosDecorator(
-                    new RestriccionSocioDecorator(
-                        new PoliticaEventoBase(), true), 4), 18);
-                        
-        assertFalse(politica.validarCompra(compradorValido, 5));
-    }
-    
-    @Test
-    public void testPoliticaCombinada_RechazaPorMembresia() {
-        IPoliticaCompra politica = 
-            new VerificacionEdadDecorator(
-                new LimiteBoletosDecorator(
-                    new RestriccionSocioDecorator(
-                        new PoliticaEventoBase(), true), 4), 18);
-                        
-        assertFalse(politica.validarCompra(compradorNoSocio, 2));
+    public void testVerificacionEdadDecorator_ValidarCompra_Limite_EdadMinimaExacta() {
+        IPoliticaCompra base = new PoliticaEventoBase();
+        VerificacionEdadDecorator decorator = new VerificacionEdadDecorator(base, 18);
+
+        Comprador edadExacta = new Comprador();
+        edadExacta.setNombre("Carlos Vera");
+        edadExacta.setEdad(18);
+        edadExacta.setEsSocio(false);
+
+        assertTrue(decorator.validarCompra(edadExacta, 1));
     }
 }

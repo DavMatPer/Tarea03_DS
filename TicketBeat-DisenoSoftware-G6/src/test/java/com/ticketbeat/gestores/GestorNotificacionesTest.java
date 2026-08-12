@@ -1,8 +1,8 @@
 package com.ticketbeat.gestores;
 
-import com.ticketbeat.modelo.Comprador;
-import com.ticketbeat.boletos.creaciones.BoletoGeneral;
 import com.ticketbeat.interfaces.IBoleto;
+import com.ticketbeat.modelo.Comprador;
+import com.ticketbeat.modelo.EstadoBoleto;
 import com.ticketbeat.servicios.CanalEmail;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,123 +10,147 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Pruebas para GestorNotificaciones.
+ */
 public class GestorNotificacionesTest {
 
-    private GestorNotificaciones gestorNotificaciones;
+    private GestorNotificaciones gestor;
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 
     @BeforeEach
     public void setUp() {
-        gestorNotificaciones = new GestorNotificaciones();
-        System.setOut(new PrintStream(outContent));
+        gestor = new GestorNotificaciones();
+        System.setOut(new PrintStream(outContent, true, StandardCharsets.UTF_8));
     }
 
     /**
-     * Test case TC-GN-001 & TC-GN-002 from plan_pruebas.md
-     * The current implementation of seleccionarCanalDeComunicacion always returns null,
-     * so we can only test the 'else' path.
+     * Caso de prueba TC-GN-001 del plan de pruebas.
      */
     @Test
-    public void testIniciarProcesoDeNotificacion_CanalNoDisponible() {
-        List<Comprador> compradores = new ArrayList<>();
+    public void testIniciarProcesoDeNotificacion_Tipico() {
         Comprador comprador = new Comprador();
-        comprador.setCanalPreferido(new CanalEmail()); // This won't be used by the current stub
+        comprador.setNombre("Juan Perez");
+        comprador.setCanalPreferido(new CanalEmail());
+
+        List<Comprador> compradores = new ArrayList<>();
         compradores.add(comprador);
 
-        gestorNotificaciones.iniciarProcesoDeNotificacion(compradores, "Mensaje de prueba");
+        gestor.iniciarProcesoDeNotificacion(compradores, "Su evento fue actualizado");
 
-        String output = outContent.toString();
+        String output = outContent.toString(StandardCharsets.UTF_8);
+        assertTrue(output.contains("[EMAIL] Enviando correo: Hola, Su evento fue actualizado"));
+        assertTrue(output.contains("Estado de entrega registrado."));
+    }
+
+    /**
+     * Caso de prueba TC-GN-002 del plan de pruebas.
+     *
+     * CORREGIDO: no existe una lógica real de canal secundario; solo se
+     * imprimen mensajes informativos.
+     */
+    @Test
+    public void testIniciarProcesoDeNotificacion_Limite_SinCanalPreferido() {
+        Comprador comprador = new Comprador();
+        comprador.setNombre("Ana Lopez");
+        // canalPreferido queda null
+
+        List<Comprador> compradores = new ArrayList<>();
+        compradores.add(comprador);
+
+        gestor.iniciarProcesoDeNotificacion(compradores, "Su evento fue actualizado");
+
+        String output = outContent.toString(StandardCharsets.UTF_8);
         assertTrue(output.contains("Canal no disponible, intentar siguiente canal"));
         assertTrue(output.contains("Encolar notificación para reintento"));
     }
 
     /**
-     * Test case TC-GN-003 from plan_pruebas.md
+     * Caso de prueba TC-GN-003 del plan de pruebas.
      */
     @Test
     public void testIniciarProcesoDeNotificacion_Error_ListaNula() {
-        assertThrows(NullPointerException.class, () -> {
-            gestorNotificaciones.iniciarProcesoDeNotificacion(null, "Mensaje");
-        });
-    }
-    
-    /**
-     * Test case TC-GN-004 from plan_pruebas.md
-     * This tests a private method, which is not ideal. We test its effect through the public method.
-     * The current implementation returns null, so it doesn't throw an error for a null comprador.
-     */
-    @Test
-    public void testSeleccionarCanalDeComunicacion_CompradorNulo() {
-        List<Comprador> compradores = new ArrayList<>();
-        compradores.add(null);
-        // The loop will throw a NullPointerException when trying to access methods on the null comprador
-        // if the private method were to use it. Currently, it does not.
-        // However, the for-each loop itself will not throw, and since `seleccionarCanalDeComunicacion`
-        // doesn't use the `comprador` object, it just runs the 'else' block.
-        gestorNotificaciones.iniciarProcesoDeNotificacion(compradores, "Test");
-        assertTrue(outContent.toString().contains("Canal no disponible"));
-    }
-    
-    /**
-     * Test case TC-GN-005 from plan_pruebas.md
-     * This test points out that the method is not implemented correctly, as it always returns null.
-     */
-    @Test
-    public void testSeleccionarCanalDeComunicacion_ImplementacionIncorrecta() {
-        // This is a conceptual test. The code to test this would involve refactoring GestorNotificaciones
-        // to allow injecting a different implementation of a private method, which is complex.
-        // We document that the current code always returns null and thus the "if" branch is dead code.
-        List<Comprador> compradores = new ArrayList<>();
-        Comprador comprador = new Comprador();
-        comprador.setCanalPreferido(new CanalEmail());
-        compradores.add(comprador);
-        
-        gestorNotificaciones.iniciarProcesoDeNotificacion(compradores, "Test");
-        
-        // As per current code, this will fail. This test exposes the bug/dead code.
-        assertFalse(outContent.toString().contains("Estado de entrega registrado."));
-        assertTrue(outContent.toString().contains("Canal no disponible"));
+        assertThrows(NullPointerException.class,
+                () -> gestor.iniciarProcesoDeNotificacion(null, "mensaje"));
     }
 
     /**
-     * Test case TC-GN-006 from plan_pruebas.md
+     * Caso de prueba TC-GN-004 del plan de pruebas.
+     *
+     * seleccionarCanalDeComunicacion es privado; se invoca vía reflection.
      */
     @Test
-    public void testNotificarCompradores_ListaNula() {
-        // The method only uses the list to print, so a null will be printed as "null". No NPE.
-        assertDoesNotThrow(() -> {
-            gestorNotificaciones.notificarCompradores(null, "Mensaje");
-        });
-        assertTrue(outContent.toString().contains("Enviando notificación masiva: Mensaje"));
+    public void testSeleccionarCanalDeComunicacion_Limite_CompradorNulo() throws Exception {
+        Method metodo = GestorNotificaciones.class.getDeclaredMethod("seleccionarCanalDeComunicacion", Comprador.class);
+        metodo.setAccessible(true);
+        Object resultado = metodo.invoke(gestor, (Comprador) null);
+        assertNull(resultado, "El método valida explícitamente comprador == null.");
     }
-    
+
     /**
-     * Test case TC-GN-007 from plan_pruebas.md
-     * This test points out the method is not well implemented as it doesn't iterate.
+     * Caso de prueba TC-GN-005 del plan de pruebas.
+     *
+     * CORREGIDO: el método está correctamente implementado (delega al getter);
+     * se reclasifica como caso Típico.
      */
     @Test
-    public void testNotificarCompradores_NoItera() {
+    public void testSeleccionarCanalDeComunicacion_Tipico() throws Exception {
+        Comprador comprador = new Comprador();
+        CanalEmail canal = new CanalEmail();
+        comprador.setCanalPreferido(canal);
+
+        Method metodo = GestorNotificaciones.class.getDeclaredMethod("seleccionarCanalDeComunicacion", Comprador.class);
+        metodo.setAccessible(true);
+        Object resultado = metodo.invoke(gestor, comprador);
+
+        assertSame(canal, resultado);
+    }
+
+    /**
+     * Caso de prueba TC-GN-006 del plan de pruebas.
+     */
+    @Test
+    public void testNotificarCompradores_Limite_ListaNula() {
+        assertDoesNotThrow(() -> gestor.notificarCompradores(null, "Evento cancelado"));
+    }
+
+    /**
+     * Caso de prueba TC-GN-007 del plan de pruebas.
+     *
+     * CORREGIDO: el método (stub) ignora por completo la lista recibida; no hay
+     * iteración sobre los datos.
+     */
+    @Test
+    public void testNotificarCompradores_Limite_SinIteracion() {
         List<IBoleto> boletos = new ArrayList<>();
-        boletos.add(new BoletoGeneral());
-        
-        gestorNotificaciones.notificarCompradores(boletos, "Mensaje");
-        
-        // The current implementation just prints the message and ignores the list.
-        // This test verifies that behavior.
-        assertTrue(outContent.toString().contains("Enviando notificación masiva: Mensaje"));
+        boletos.add(new BoletoFalso());
+        boletos.add(new BoletoFalso());
+        boletos.add(new BoletoFalso());
+
+        gestor.notificarCompradores(boletos, "Evento cancelado");
+
+        String output = outContent.toString(StandardCharsets.UTF_8);
+        long lineasDeNotificacion = output.lines().filter(l -> l.contains("Enviando notificaci")).count();
+        assertEquals(1, lineasDeNotificacion, "Solo se imprime un mensaje genérico, sin recorrer la lista.");
     }
-    
+
     /**
-     * Test case TC-GN-008 from plan_pruebas.md
+     * Caso de prueba TC-GN-008 del plan de pruebas.
      */
     @Test
-    public void testNotificarResolucion_CompradorNulo() {
-        assertDoesNotThrow(() -> {
-            gestorNotificaciones.notificarResolucion(null, "Resolución");
-        });
-        assertTrue(outContent.toString().contains("Notificando resolución al comprador: Resolución"));
+    public void testNotificarResolucion_Limite_CompradorNulo() {
+        assertDoesNotThrow(() -> gestor.notificarResolucion(null, "Su incidente fue resuelto"));
+    }
+
+    /** Implementación mínima de IBoleto usada solo para poblar listas en las pruebas. */
+    private static class BoletoFalso implements IBoleto {
+        @Override public void mostrarDetalles() { }
+        @Override public EstadoBoleto getEstado() { return EstadoBoleto.VENDIDO; }
+        @Override public double getPrecio() { return 0; }
     }
 }

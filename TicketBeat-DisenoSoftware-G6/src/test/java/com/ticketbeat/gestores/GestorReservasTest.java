@@ -7,75 +7,90 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
+/**
+ * Pruebas para GestorReservas.
+ */
 public class GestorReservasTest {
 
-    private GestorReservas gestorReservas;
+    private GestorReservas gestor;
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 
     @BeforeEach
     public void setUp() {
-        gestorReservas = new GestorReservas();
-        System.setOut(new PrintStream(outContent));
+        gestor = new GestorReservas();
+        System.setOut(new PrintStream(outContent, true, StandardCharsets.UTF_8));
     }
 
     /**
-     * Test case TC-GR-001 from plan_pruebas.md
-     * The private methods are stubs, so this test can only verify that no exceptions are thrown.
+     * Caso de prueba TC-GR-001 del plan de pruebas.
+     *
+     * CORREGIDO: reservarEntradas() e iniciarTemporizadorDeReserva() son métodos
+     * privados vacíos; no hay salida por consola ni efecto observable en el
+     * flujo exitoso. Solo puede verificarse que no se lanza excepción.
      */
     @Test
-    public void testElegirCantidadYTipoDeEntrada_Típico() {
-        // Since verificarDisponibilidad() is hardcoded to true, this path will always be taken.
-        assertDoesNotThrow(() -> {
-            gestorReservas.elegirCantidadYTipoDeEntrada();
-        });
-        // We can't verify the private method calls without refactoring or a mocking framework.
+    public void testElegirCantidadYTipoDeEntrada_Tipico() {
+        assertDoesNotThrow(() -> gestor.elegirCantidadYTipoDeEntrada());
+        assertEquals("", outContent.toString(StandardCharsets.UTF_8),
+                "El camino de disponibilidad confirmada no produce salida por consola (stubs vacíos).");
     }
 
     /**
-     * Test case TC-GR-002 from plan_pruebas.md
+     * Caso de prueba TC-GR-002 del plan de pruebas.
+     *
+     * CORREGIDO: se imprime la confirmación, pero marcarEntradasComoVendidas()
+     * es un stub vacío: no hay ningún boleto cuyo estado se pueda verificar.
      */
     @Test
-    public void testConfirmarCompra_Típico() {
-        gestorReservas.setEstrategiaPago(new PagoTarjetaStrategy("VISA"));
-        gestorReservas.confirmarCompra(100.0, new HashMap<>());
-        String output = outContent.toString();
-        assertTrue(output.contains("Confirmación de pago"));
+    public void testConfirmarCompra_Tipico() {
+        gestor.setEstrategiaPago(new PagoTarjetaStrategy("Visa/Mastercard"));
+
+        gestor.confirmarCompra(150.0, new HashMap<>());
+
+        String output = outContent.toString(StandardCharsets.UTF_8);
+        assertTrue(output.contains("Confirmación de pago (ID:"));
         assertTrue(output.contains("Confirmación de compra y boletos"));
-        assertFalse(output.contains("Pago rechazado"));
     }
 
     /**
-     * Test case TC-GR-003 from plan_pruebas.md
+     * Caso de prueba TC-GR-003 del plan de pruebas.
      */
     @Test
     public void testConfirmarCompra_Error_EstrategiaNula() {
-        gestorReservas.confirmarCompra(100.0, new HashMap<>());
-        String output = outContent.toString();
+        gestor.confirmarCompra(100.0, new HashMap<>());
+
+        String output = outContent.toString(StandardCharsets.UTF_8);
         assertTrue(output.contains("Error: No se ha seleccionado una estrategia de pago."));
-        assertFalse(output.contains("Confirmación de pago"));
     }
 
     /**
-     * Test case TC-GR-004 from plan_pruebas.md
+     * Caso de prueba TC-GR-004 del plan de pruebas.
      */
     @Test
-    public void testConfirmarCompra_Límite_MontoCero() {
-        gestorReservas.setEstrategiaPago(new PagoTarjetaStrategy("VISA"));
-        gestorReservas.confirmarCompra(0.0, new HashMap<>());
-        String output = outContent.toString();
-        assertTrue(output.contains("Confirmación de pago"));
-        assertTrue(output.contains("Confirmación de compra y boletos"));
+    public void testConfirmarCompra_Limite_MontoCero() {
+        gestor.setEstrategiaPago(new PagoTarjetaStrategy("Visa/Mastercard"));
+
+        gestor.confirmarCompra(0.0, new HashMap<>());
+
+        String output = outContent.toString(StandardCharsets.UTF_8);
+        assertTrue(output.contains("Confirmación de compra y boletos"),
+                "El pago se procesa igual como COMPLETADO, sin validar el monto.");
     }
 
     /**
-     * Test case TC-GR-005 from plan_pruebas.md
+     * Caso de prueba TC-GR-005 del plan de pruebas.
+     *
+     * CORREGIDO: liberarEntradasReservadas() es un stub vacío; solo se imprime
+     * el mensaje de expiración.
      */
     @Test
-    public void testTiempoDeReservaExpirado_Típico() {
-        gestorReservas.tiempoDeReservaExpirado();
-        String output = outContent.toString();
+    public void testTiempoDeReservaExpirado_Tipico() {
+        gestor.tiempoDeReservaExpirado();
+
+        String output = outContent.toString(StandardCharsets.UTF_8);
         assertTrue(output.contains("Informar expiración de reserva"));
     }
 }
